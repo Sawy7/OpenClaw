@@ -2267,13 +2267,13 @@ extern "C" {
 
     static mz_bool mz_zip_set_file_times(const char *pFilename, time_t access_time, time_t modified_time)
     {
-#ifndef MINIZ_NO_TIME
-        struct utimbuf t; t.actime = access_time; t.modtime = modified_time;
-        return !utime(pFilename, &t);
-#else
+// #ifndef MINIZ_NO_TIME
+//         struct utimbuf t; t.actime = access_time; t.modtime = modified_time;
+//         return !utime(pFilename, &t);
+// #else
         (void)pFilename, (void)access_time, (void)modified_time;
         return MZ_TRUE;
-#endif // #ifndef MINIZ_NO_TIME
+// #endif // #ifndef MINIZ_NO_TIME
     }
 #endif
 

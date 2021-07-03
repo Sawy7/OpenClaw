@@ -56,26 +56,36 @@ std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, const s
 
 int32 ResourceMgrImpl::VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), const std::string& resCacheName)
 {
+    LOG("bonk1");
+    
     assert(!m_ResourceCacheList.empty());
+
+    LOG("bonk2");
 
     int32 totalLoaded = 0;
 
     // Preload res cache by name
     if (!resCacheName.empty())
     {
+        LOG("bonk3");
         std::shared_ptr<ResourceCache> pResCache = VGetResourceCacheFromName(resCacheName);
+        LOG("bonkX");
         assert(pResCache != NULL);
+        LOG("bonkXY");
 
         return pResCache->Preload(pattern, progressCallback);
     }
     else // Preload all available res caches
     {
+        LOG("bonk4");
         for (auto &pResCache : m_ResourceCacheList)
         {
             totalLoaded += pResCache->Preload(pattern, progressCallback);
         }
     }
 
+    LOG("bonk5");
+    
     return totalLoaded;
 }
 

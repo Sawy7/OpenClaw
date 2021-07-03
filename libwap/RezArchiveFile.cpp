@@ -11,6 +11,7 @@
 
 #include "libwap.h"
 #include <iostream>
+#include "../OpenClaw/Engine/Logger/Logger.h"
 
 using namespace std;
 
@@ -117,9 +118,12 @@ char* WAP_GetRezFileData(RezFile* rezFile)
         return NULL;
     }
 
+    LOG("bonk 44");
+
     // Check if we already accessed this file
     if (g_rezFileDataMap.count(rezFile) != 0)
     {
+        LOG("bonk 45");
         return g_rezFileDataMap[rezFile];
     }
     else
@@ -127,21 +131,28 @@ char* WAP_GetRezFileData(RezFile* rezFile)
         // First time accessing it, we have to allocate it and load it
 
         // Check if there is REZ archive entry
+        LOG("bonk 46");
         if (g_rezArchiveFileEntryMap.count(rezFile->owner) == 0)
         {
+            LOG("bonk 47");
             return NULL;
         }
 
-        // Create new entry for rez file and allocate its data buffer
-        g_rezFileDataMap.insert(std::pair<RezFile*, char*>(rezFile, new char[rezFile->size]));
+        // Create new entry for rez file and allocate its data buffer     
+        g_rezFileDataMap.insert(std::pair<RezFile*, char*>(rezFile, new char[rezFile->size])); // HERE??
+        LOG("bonk 48");
 
         RezArchiveFileEntry* rezArchiveFileEntry = g_rezArchiveFileEntryMap[rezFile->owner];
+        LOG("bonk 49");
 
         std::lock_guard<std::mutex> lock(rezArchiveFileEntry->mutex);
+        LOG("bonk 50");
 
         // Seek to file's offset within REZ file and load it
         rezArchiveFileEntry->fileStream->seekg(rezFile->offset, std::ios::beg);
+        LOG("bonk 51");
         rezArchiveFileEntry->fileStream->read(g_rezFileDataMap[rezFile], rezFile->size);
+        LOG("bonk 52");
     }
 
     return g_rezFileDataMap[rezFile];

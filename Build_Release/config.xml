@@ -1,6 +1,6 @@
 <Configuration>
   <Display>
-    <Size width="1600" height="1200" />
+    <Size width="960" height="544" />
     <Scale>1</Scale>
     <UseVerticalSync>false</UseVerticalSync>
     <IsFullscreen>false</IsFullscreen>
@@ -22,7 +22,7 @@
     <ConsoleFont font="clacon.ttf" size="20" />
   </Font>
   <Assets>
-    <AssetsFolder></AssetsFolder>
+    <AssetsFolder>ux0:/data/openclaw/</AssetsFolder>
     <RezArchive>CLAW.REZ</RezArchive>
     <CustomArchive>ASSETS.ZIP</CustomArchive>
     <ResourceCacheSize>150</ResourceCacheSize>

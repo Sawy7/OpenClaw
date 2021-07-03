@@ -22,7 +22,7 @@
         <ConsoleFont font="clacon.ttf" size="20" />
     </Font>
     <Assets>
-        <AssetsFolder>/usr/share/captainclaw/</AssetsFolder>
+        <AssetsFolder>ux0:/data/openclaw/</AssetsFolder>
         <RezArchive>CLAW.REZ</RezArchive>
         <CustomArchive>ASSETS.ZIP</CustomArchive>
         <ResourceCacheSize>150</ResourceCacheSize>

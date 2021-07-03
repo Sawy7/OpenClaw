@@ -67,6 +67,7 @@ int32 ResourceRezArchive::VGetRawResource(Resource* r, char* outBuffer)
     assert(outBuffer != NULL);
 
     RezFile* rezFile = WAP_GetRezFileFromRezArchive(_rezArchive, r->GetName().c_str());
+    LOG("bonk 40");
     if (rezFile == NULL)
     {
         LOG_ERROR("Could not locate: " + r->GetName() + " in rezArchive: " + _rezArchiveFileName);
@@ -75,6 +76,7 @@ int32 ResourceRezArchive::VGetRawResource(Resource* r, char* outBuffer)
 
     // This this buffer is owner by libwap => we need to create our own
     char* data = WAP_GetRezFileData(rezFile);
+    LOG("bonk 41");
     //LOG_WARNING("rezFile->fullName = " + std::string(rezFile->fullPathAndName));
     if (data == NULL)
     {
@@ -84,9 +86,11 @@ int32 ResourceRezArchive::VGetRawResource(Resource* r, char* outBuffer)
 
     // 
     memcpy(outBuffer, data, rezFile->size);
+    LOG("bonk 42");
 
     // We dont need libwaps data anymore
     WAP_FreeFileData(rezFile);
+    LOG("bonk 43");
 
     return rezFile->size;
 }
@@ -272,14 +276,19 @@ void ResourceCache::RegisterLoader(std::shared_ptr<IResourceLoader> loader)
 std::shared_ptr<ResourceHandle> ResourceCache::GetHandle(Resource* r)
 {
     std::shared_ptr<ResourceHandle> handle(Find(r));
+    LOG("bonk 13");
     if (handle == nullptr)
     {
+        LOG("bonk 14");
         handle = Load(r);
     }
     else
     {
+        LOG("bonk 15");
         Update(handle);
     }
+
+    LOG("bonk 16");
 
     return handle;
 }
@@ -289,13 +298,17 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     std::shared_ptr<IResourceLoader> loader;
     std::shared_ptr<ResourceHandle> handle;
 
+    LOG("bonk 17");
+
     for (auto resourceLoader : _resourceLoaderList)
     {
         std::shared_ptr<IResourceLoader> testLoader = resourceLoader;
+        LOG("bonk 18");
 
         if (WildcardMatch(testLoader->VGetPattern().c_str(), r->GetName().c_str()))
         {
             loader = testLoader;
+            LOG("bonk 19");
             break;
         }
     }
@@ -306,7 +319,9 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
         return nullptr;
     }
 
+    LOG("bonk 19X");
     int32 rawSize = _resourceFile->VGetRawResourceSize(r);
+    LOG("bonk 19XY");
     if (rawSize < 0)
     {
         LOG_ERROR("Resource size return -1 => Resource not found. Resource: " + r->GetName());
@@ -314,7 +329,9 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     }
 
     int32 allocSize = rawSize + ((loader->VAddNullZero()) ? (1) : (0));
+    LOG("bonk 19XXX");
     char* rawBuffer = loader->VUseRawFile() ? Allocate(allocSize) : new /*(std::nothrow)*/ char[allocSize];
+    LOG("bonk 19YYY");
     if (rawBuffer == NULL)
     {
         LOG_ERROR("Could not allocate enough memory for resource: " + r->GetName() + 
@@ -322,6 +339,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
         return nullptr;
     }
     memset(rawBuffer, 0, allocSize);
+    LOG("bonk 19.5X");
 
     if (_resourceFile->VGetRawResource(r, rawBuffer) < 0)
     {
@@ -333,16 +351,24 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     char* buffer = NULL;
     uint32 size = 0;
 
+    LOG("bonk 20");
+
     // Just store binary data + size in handle
     if (loader->VUseRawFile())
     {
+        LOG("bonk 21");
         buffer = rawBuffer;
         handle = std::shared_ptr<ResourceHandle>(new ResourceHandle(*r, buffer, rawSize, this));
+        LOG("bonk 22");
     }
     else // Or store meaningful arbitrary file format
     {
-        size = loader->VGetLoadedResourceSize(rawBuffer, rawSize);
+        LOG("bonk 23");
+        // size = loader->VGetLoadedResourceSize(rawBuffer, rawSize);
+        size = rawSize;
+        LOG("bonk 24");
         buffer = Allocate(size);
+        LOG("bonk 25");
         if (buffer == NULL)
         {
             LOG_ERROR("Could not allocate enough memory for resource: " + r->GetName() +
@@ -352,9 +378,11 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
          
         handle = std::shared_ptr<ResourceHandle>(new ResourceHandle(*r, buffer, size, this));
         bool success = loader->VLoadResource(rawBuffer, rawSize, handle);
+        LOG("bonk 26");
 
         if (loader->VDiscardRawBufferAfterLoad())
         {
+            LOG("bonk 27");
             SAFE_DELETE_ARRAY(rawBuffer);
         }
 
@@ -373,7 +401,9 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     }
 
     _lruList.push_front(handle);
+    LOG("bonk 28");
     _resourceMap[r->GetName()] = handle;
+    LOG("bonk 29");
 
     return handle;
 }
@@ -497,34 +527,49 @@ int32 ResourceCache::Preload(const std::string pattern, void(*progressCallback)(
 {
     if (_resourceFile == NULL)
     {
+        LOG("bonk 6");
         return 0;
     }
+
+    LOG("bonk 7");
         
     int32 numFiles = _resourceFile->VGetNumResources();
     int32 loaded = 0;
     bool cancel = false;
 
+    LOG("bonk 8");
+
     // Everything is converted into lower case so maintain consistency
     std::string patternCopy = pattern;
     std::transform(patternCopy.begin(), patternCopy.end(), patternCopy.begin(), (int(*)(int)) std::tolower);
+
+    LOG("bonk 9");
 
     for (int32 fileIdx = 0; fileIdx < numFiles; ++fileIdx)
     {
         Resource resource(_resourceFile->VGetResourceName(fileIdx));
         //cout << "Checking pattern for resource: " << resource.GetName() << endl;
+        LOG("bonk 10");
 
         if (WildcardMatch(patternCopy.c_str(), resource.GetName().c_str()))
         {
             // This loads unloaded resource and skips loaded ones
+            std::string logmess = "bonkname: " + resource.GetName();
+            LOG(logmess);
+            LOG("bonk 11");
             GetHandle(&resource);
+            LOG("bonk 12");
             ++loaded;
         }
 
         if (progressCallback != NULL)
         {
+            LOG("bonk 13");
             progressCallback((fileIdx / numFiles) * 100, cancel);
         }
     }
+
+    LOG("bonk 10");
 
     return loaded;
 }

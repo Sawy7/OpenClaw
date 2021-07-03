@@ -69,7 +69,11 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     if (!ReadActorXmlPrototypes(m_GameOptions)) return false;
     if (!ReadLevelMetadata(m_GameOptions)) return false;
 
+    LOG("bruh, we here now");
+
     RegisterAllDelegates();
+
+    LOG("bruh, we here now 2");
 
     m_pGame = VCreateGameAndView();
     if (!m_pGame)
@@ -78,12 +82,21 @@ bool BaseGameApp::Initialize(int argc, char** argv)
         return false;
     }
 
+    LOG("bruh, we here now 3");
+    
+    LOG("before first preload");
     m_pResourceMgr->VPreload("/CLAW/*", NULL, ORIGINAL_RESOURCE);
+    LOG("before second preload");
     m_pResourceMgr->VPreload("/GAME/*", NULL, ORIGINAL_RESOURCE);
+    LOG("before third preload");
     m_pResourceMgr->VPreload("/STATES/*", NULL, ORIGINAL_RESOURCE);
 
+    LOG("bruh, we here now 4");
+    
     m_pResourceMgr->VPreload("*", NULL, CUSTOM_RESOURCE);
 
+    LOG("bruh, we here now 5");
+    
     if (!VPerformStartupTests())
     {
         LOG_ERROR("Failed to pass certain startup tests.");
@@ -92,6 +105,8 @@ bool BaseGameApp::Initialize(int argc, char** argv)
 
     m_IsRunning = true;
 
+    LOG("bruh, we here now 6");
+    
     return true;
 }
 

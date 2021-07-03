@@ -257,20 +257,20 @@ typedef uint64_t Uint64;
 #endif
 #endif /* SDL_DISABLE_ANALYZE_MACROS */
 
-#define SDL_COMPILE_TIME_ASSERT(name, x)               \
-       typedef int SDL_dummy_ ## name[(x) * 2 - 1]
-/** \cond */
-#ifndef DOXYGEN_SHOULD_IGNORE_THIS
-SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
-SDL_COMPILE_TIME_ASSERT(sint8, sizeof(Sint8) == 1);
-SDL_COMPILE_TIME_ASSERT(uint16, sizeof(Uint16) == 2);
-SDL_COMPILE_TIME_ASSERT(sint16, sizeof(Sint16) == 2);
-SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
-SDL_COMPILE_TIME_ASSERT(sint32, sizeof(Sint32) == 4);
-SDL_COMPILE_TIME_ASSERT(uint64, sizeof(Uint64) == 8);
-SDL_COMPILE_TIME_ASSERT(sint64, sizeof(Sint64) == 8);
-#endif /* DOXYGEN_SHOULD_IGNORE_THIS */
-/** \endcond */
+// #define SDL_COMPILE_TIME_ASSERT(name, x)               \
+//        typedef int SDL_dummy_ ## name[(x) * 2 - 1]
+// /** \cond */
+// #ifndef DOXYGEN_SHOULD_IGNORE_THIS
+// SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
+// SDL_COMPILE_TIME_ASSERT(sint8, sizeof(Sint8) == 1);
+// SDL_COMPILE_TIME_ASSERT(uint16, sizeof(Uint16) == 2);
+// SDL_COMPILE_TIME_ASSERT(sint16, sizeof(Sint16) == 2);
+// SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
+// SDL_COMPILE_TIME_ASSERT(sint32, sizeof(Sint32) == 4);
+// SDL_COMPILE_TIME_ASSERT(uint64, sizeof(Uint64) == 8);
+// SDL_COMPILE_TIME_ASSERT(sint64, sizeof(Sint64) == 8);
+// #endif /* DOXYGEN_SHOULD_IGNORE_THIS */
+// /** \endcond */
 
 /* Check to make sure enums are the size of ints, for structure packing.
    For both Watcom C/C++ and Borland C/C++ the compiler option that makes
@@ -278,19 +278,19 @@ SDL_COMPILE_TIME_ASSERT(sint64, sizeof(Sint64) == 8);
    This is "-b" for Borland C/C++ and "-ei" for Watcom C/C++ (v11).
 */
 
-/** \cond */
-#ifndef DOXYGEN_SHOULD_IGNORE_THIS
-#if !defined(__ANDROID__)
-   /* TODO: include/SDL_stdinc.h:174: error: size of array 'SDL_dummy_enum' is negative */
-typedef enum
-{
-    DUMMY_ENUM_VALUE
-} SDL_DUMMY_ENUM;
+// /** \cond */
+// #ifndef DOXYGEN_SHOULD_IGNORE_THIS
+// #if !defined(__ANDROID__)
+//    /* TODO: include/SDL_stdinc.h:174: error: size of array 'SDL_dummy_enum' is negative */
+// typedef enum
+// {
+//     DUMMY_ENUM_VALUE
+// } SDL_DUMMY_ENUM;
 
-SDL_COMPILE_TIME_ASSERT(enum, sizeof(SDL_DUMMY_ENUM) == sizeof(int));
-#endif
-#endif /* DOXYGEN_SHOULD_IGNORE_THIS */
-/** \endcond */
+// SDL_COMPILE_TIME_ASSERT(enum, sizeof(SDL_DUMMY_ENUM) == sizeof(int));
+// #endif
+// #endif /* DOXYGEN_SHOULD_IGNORE_THIS */
+// /** \endcond */
 
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */

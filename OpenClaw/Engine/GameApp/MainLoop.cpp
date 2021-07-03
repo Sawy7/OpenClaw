@@ -20,22 +20,24 @@ int RunGameEngine(int argc, char** argv)
 
     std::string userDirectory = "";
 
-#if defined(__ANDROID__)
-    userDirectory = "/sdcard/claw/";
-#elif defined(__WINDOWS__)
-    userDirectory = "";
-#else
-    const char* homedir;
+// #if defined(__ANDROID__)
+//     userDirectory = "/sdcard/claw/";
+// #elif defined(__WINDOWS__)
+//     userDirectory = "";
+// #else
+//     const char* homedir;
 
-    if ((homedir = getenv("HOME")) == NULL) 
-    {
-        homedir = getpwuid(getuid())->pw_dir;
-    }
-    assert(homedir != NULL);
+//     if ((homedir = getenv("HOME")) == NULL) 
+//     {
+//         homedir = getpwuid(getuid())->pw_dir;
+//     }
+//     assert(homedir != NULL);
 
-    userDirectory = std::string(homedir) + "/.config/openclaw/";
+//     userDirectory = std::string(homedir) + "/.config/openclaw/";
 
-#endif
+// #endif
+
+    userDirectory = "ux0:data/openclaw/";
 
     LOG("Looking for: " + userDirectory + "config.xml");
 
